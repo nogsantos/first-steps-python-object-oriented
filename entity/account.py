@@ -19,11 +19,30 @@ class Account:
         self.__balance += value
 
     def debit(self, value):
-        if value > self.__balance:
-            return False
-        self.__balance -= value
-        return True
+        if self.__can_debit(value):
+            self.__balance -= value
+        else:
+            print("The value {} passing the limit".format(value))
 
     def transfer(self, value, destiny):
-        if self.debit(value):
-            destiny.credit(value)
+        self.debit(value)
+        destiny.credit(value)
+
+    def __can_debit(self, value):
+        available_value = self.__balance + self.__credit_limit
+        return value <= available_value
+
+    @property
+    def credit_limit(self):
+        return self.__credit_limit
+
+    @credit_limit.setter
+    def credit_limit(self, value):
+        self.__credit_limit = value
+
+    @staticmethod
+    def banks_codes():
+        return {
+            "Brazil": "001",
+            "Caixa": "003",
+        }
